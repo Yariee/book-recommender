@@ -9,9 +9,14 @@ ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 app = FastAPI()
 
 
+class Message(BaseModel):
+    role: str
+    content: str
+
 # Defining the shape of the data we are expecting to recieve
 class BookTitle(BaseModel):
     book_name: str
+    messages: list[Message] = []
 
 
 @app.get("/")
