@@ -27,14 +27,11 @@ async def root():
 @app.post("/recommend")
 def create_title(title: BookTitle):
     client = anthropic.Anthropic()
+    message_history = [m.model_dump() for m in title.messages]
+    messages = message_history + [{"role": "user", "content": f"I just read {title.book_name}"}]
     message = client.messages.create(
         model="claude-haiku-4-5-20251001",
         max_tokens=1000,
-        messages=[
-            {
-                "role": "user",
-                "content": f"I just read {title.book_name}, what are 5 books you recommend?"
-            }
-        ]
+        messages=messages
     )
     return {"recommendations": message.content[0].text}
